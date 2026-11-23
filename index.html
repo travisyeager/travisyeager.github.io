@@ -264,71 +264,6 @@
       .address .to { font-size: 22px; }
       .address .rule { height: 20px; }
     }
-
-    /* Email modal */
-    dialog.note {
-      margin: auto;
-      width: min(calc(100% - 32px), 420px);
-      padding: 0;
-      border: 0;
-      border-radius: 16px;
-      background: var(--surface);
-      color: var(--ink);
-      box-shadow: var(--shadow);
-    }
-    dialog.note::backdrop { background: rgba(26, 23, 20, 0.45); }
-    dialog.note[open] { animation: pop 200ms var(--ease) both; }
-    dialog.note[open]::backdrop { animation: fade 200ms var(--ease) both; }
-    @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
-    @keyframes fade { from { opacity: 0; } }
-    .note-body { padding: 28px 24px 24px; position: relative; }
-    .note-eyebrow { font-family: var(--mono); font-size: 13px; color: var(--ink-3); display: inline-flex; align-items: center; gap: 8px; }
-    .note-eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-    .note h2 {
-      margin-top: 12px;
-      font-family: var(--display);
-      font-weight: 400;
-      font-variation-settings: "SOFT" 100, "WONK" 1;
-      font-size: 32px;
-      line-height: 1.1;
-      letter-spacing: -0.01em;
-    }
-    .note p { margin-top: 8px; color: var(--ink-2); }
-    .addr-row {
-      margin-top: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      height: 48px;
-      padding: 0 4px 0 16px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--bg);
-    }
-    .addr-row code { flex: 1; min-width: 0; font-family: var(--mono); font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; user-select: all; }
-    .ghost {
-      display: inline-flex; align-items: center; gap: 6px;
-      height: 40px; padding: 0 12px;
-      border: 0; border-radius: 8px;
-      background: transparent; color: var(--ink-2);
-      font: 500 14px/1 var(--sans);
-      cursor: pointer;
-      transition: background-color 160ms var(--ease), color 160ms var(--ease);
-    }
-    .ghost:hover { background: var(--line); color: var(--ink); }
-    .ghost:focus-visible, .close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .ghost.done { color: var(--accent-ink); }
-    .note .btn { margin-top: 16px; width: 100%; justify-content: center; }
-    .close {
-      position: absolute; top: 12px; right: 12px;
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
-      border: 0; border-radius: 8px;
-      background: transparent; color: var(--ink-3);
-      cursor: pointer;
-      transition: background-color 160ms var(--ease), color 160ms var(--ease);
-    }
-    .close:hover { background: var(--line); color: var(--ink); }
   </style>
 </head>
 <body>
@@ -343,7 +278,7 @@
         <h1><span>Travis</span><span class="last">Yeager</span></h1>
         <p class="lede">Nothing posted here yet. Until there is, the best way to find me is a note in the mail.</p>
         <div class="actions">
-          <a class="btn js-mail" href="#contact" aria-haspopup="dialog">
+          <a class="btn js-mail" href="#contact">
             <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
             <span class="js-mail-label">Email me</span>
           </a>
@@ -355,7 +290,7 @@
         <noscript><p class="lede" style="font-family:var(--mono);font-size:14px">me [at] travisyeager [dot] com</p></noscript>
       </div>
 
-      <a class="mail js-mail" href="#contact" aria-label="Show Travis's email address" aria-haspopup="dialog">
+      <a class="mail js-mail" href="#contact" aria-label="Send Travis an email">
         <div class="env" aria-hidden="true"></div>
         <div class="stamp" aria-hidden="true"><div class="stamp-inner"><b>TY</b><small>1st class</small></div></div>
         <svg class="postmark" viewBox="0 0 100 100" aria-hidden="true">
@@ -381,63 +316,17 @@
     </footer>
   </div>
 
-  <dialog class="note" id="note" aria-labelledby="note-title">
-    <div class="note-body">
-      <button class="close" type="button" aria-label="Close" data-close>
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
-      </button>
-      <span class="note-eyebrow">Inbox open</span>
-      <h2 id="note-title">Write to Travis</h2>
-      <p>Copy the address, or open a new message in your mail app.</p>
-      <div class="addr-row">
-        <code class="js-addr"></code>
-        <button class="ghost js-copy" type="button">
-          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>
-          <span class="js-copy-label">Copy</span>
-        </button>
-      </div>
-      <a class="btn js-open" href="#">
-        <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-        Open in mail app
-      </a>
-    </div>
-  </dialog>
-
   <script>
     // The address is assembled here instead of written in the HTML, so scrapers that read raw markup don't find it.
     (function () {
       var parts = ["moc", "regaeysivart", "em"];
       var rev = function (s) { return s.split("").reverse().join(""); };
       var addr = rev(parts[2]) + String.fromCharCode(64) + rev(parts[1]) + "." + rev(parts[0]);
-      var mailto = "mai" + "lto:" + addr;
-      var dlg = document.getElementById("note");
-      var copyLabel = dlg.querySelector(".js-copy-label");
-      var copyBtn = dlg.querySelector(".js-copy");
-      dlg.querySelector(".js-addr").textContent = addr;
-      dlg.querySelector(".js-open").setAttribute("href", mailto);
       document.querySelectorAll(".js-mail").forEach(function (a) {
-        a.setAttribute("href", mailto); // fallback if dialogs are unsupported
-        a.addEventListener("click", function (e) {
-          if (typeof dlg.showModal !== "function") return;
-          e.preventDefault();
-          copyLabel.textContent = "Copy";
-          copyBtn.classList.remove("done");
-          dlg.showModal();
-        });
+        a.setAttribute("href", "mai" + "lto:" + addr);
       });
-      copyBtn.addEventListener("click", function () {
-        var ok = function () { copyLabel.textContent = "Copied"; copyBtn.classList.add("done"); };
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(addr).then(ok, function () { selectAddr(); });
-        } else { selectAddr(); }
-      });
-      function selectAddr() {
-        var r = document.createRange(); r.selectNodeContents(dlg.querySelector(".js-addr"));
-        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
-        try { if (document.execCommand("copy")) { copyLabel.textContent = "Copied"; copyBtn.classList.add("done"); } } catch (_) {}
-      }
-      dlg.querySelector("[data-close]").addEventListener("click", function () { dlg.close(); });
-      dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+      var label = document.querySelector(".js-mail-label");
+      if (label) label.setAttribute("title", addr);
       document.getElementById("y").textContent = new Date().getFullYear();
     })();
   </script>
