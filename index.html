@@ -2,332 +2,697 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Travis Yeager</title>
-  <meta name="description" content="Travis Yeager. Nothing posted yet, but the inbox is open.">
+  <meta name="description" content="Travis Yeager. Pull up a couch, the TV's on.">
   <link rel="canonical" href="https://travisyeager.com/">
   <meta property="og:title" content="Travis Yeager">
-  <meta property="og:description" content="Nothing posted yet, but the inbox is open.">
+  <meta property="og:description" content="Pull up a couch, the TV's on.">
   <meta property="og:url" content="https://travisyeager.com/">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#f4efe6" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1a1714" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='6' fill='%23b8441f'/%3E%3Crect x='10' y='10' width='44' height='44' rx='2' fill='none' stroke='%23f4efe6' stroke-width='2' stroke-dasharray='3 3'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='24' fill='%23f4efe6' text-anchor='middle'%3ETY%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#3b2414">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='10' width='56' height='44' rx='8' fill='%23222'/%3E%3Crect x='10' y='16' width='36' height='32' rx='6' fill='%235fb3a7'/%3E%3Ccircle cx='53' cy='24' r='3' fill='%23999'/%3E%3Ccircle cx='53' cy='34' r='3' fill='%23999'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,500,100,1&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=VT323&display=swap" rel="stylesheet">
   <style>
+    /*
+      Layout: one "stage" holds the room, sized like object-fit: contain.
+      Every object is placed in stage units (--u). Landscape stage = 160 x 100 units,
+      portrait stage = 100 x 170 units. Wall, floor and couch arms run past the stage
+      edges so any leftover viewport space is still room, never empty page.
+    */
     :root {
-      --bg: #f4efe6;
-      --surface: #fbf8f2;
-      --paper: #fffdf8;
-      --ink: #221d18;
-      --ink-2: #5c534a;
-      --ink-3: #8a8077;
-      --line: rgba(34, 29, 24, 0.10);
-      --accent: #b8441f;
-      --accent-ink: #9a3412;
-      --on-accent: #fffdf8;
-      --shadow: 0 1px 2px rgba(34, 29, 24, 0.06), 0 12px 32px -12px rgba(34, 29, 24, 0.22);
-      --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-      --display: "Fraunces", Georgia, "Times New Roman", serif;
-      --sans: "IBM Plex Sans", ui-sans-serif, -apple-system, "Segoe UI", sans-serif;
-      --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+      --wood-1: #6a4327;
+      --wood-2: #573520;
+      --oak: #b07a45;
+      --oak-dark: #7c5230;
+      --plastic: #1e1e21;
+      --carpet: #9b8a70;
+      --phosphor: #9fe3cf;
+      --vt: "VT323", ui-monospace, Menlo, monospace;
+      --u: min(1dvh, 100vw / 160);
     }
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #1a1714;
-        --surface: #221e1a;
-        --paper: #ece4d6;
-        --ink: #f1ebe2;
-        --ink-2: #b9afa4;
-        --ink-3: #8a8077;
-        --line: rgba(241, 235, 226, 0.09);
-        --accent: #d4623a;
-        --accent-ink: #e98a63;
-        --on-accent: #1a1714;
-        --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -12px rgba(0, 0, 0, 0.6);
-      }
-    }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
+    html, body { height: 100%; }
     body {
-      min-height: 100vh;
-      min-height: 100dvh;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: 16px;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .page {
-      flex: 1;
-      width: 100%;
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 32px 32px 40px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 40px;
-    }
-
-    header, footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--ink-3);
-    }
-    .status { display: inline-flex; align-items: center; gap: 8px; }
-    .status::before {
-      content: "";
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      align-items: center;
-      gap: 64px;
-    }
-
-    .copy { animation: rise 600ms var(--ease) both; }
-    h1 {
-      font-family: var(--display);
-      font-weight: 400;
-      font-variation-settings: "SOFT" 100, "WONK" 1;
-      font-size: clamp(56px, 9vw, 112px);
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-    }
-    h1 span { display: block; }
-    h1 .last { color: var(--accent-ink); font-variation-settings: "SOFT" 100, "WONK" 1; }
-    .lede {
-      margin-top: 24px;
-      max-width: 34ch;
-      font-size: 18px;
-      color: var(--ink-2);
-    }
-    .actions {
-      margin-top: 32px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 12px 24px;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      height: 48px;
-      padding: 0 20px;
-      border-radius: 10px;
-      background: var(--accent);
-      color: var(--on-accent);
-      font: 500 16px/1 var(--sans);
-      text-decoration: none;
-      transition: background-color 160ms var(--ease), transform 120ms var(--ease);
-    }
-    .btn:hover { background: var(--accent-ink); }
-    .btn:active { transform: scale(0.98); }
-    .link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--ink);
-      font-weight: 500;
-      text-decoration: none;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 2px;
-      transition: border-color 160ms var(--ease), color 160ms var(--ease);
-    }
-    .link:hover { border-color: var(--ink); }
-    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-    .btn:focus-visible { outline-offset: 3px; }
-    svg.i { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-
-    /* The envelope: the one bright thing on the page */
-    .mail {
-      justify-self: center;
-      width: min(100%, 440px);
-      aspect-ratio: 11 / 7;
-      position: relative;
-      display: block;
-      color: inherit;
-      text-decoration: none;
-      transform: rotate(-4deg);
-      transition: transform 240ms var(--ease);
-      animation: rise 700ms 120ms var(--ease) both;
-      perspective: 1200px;
-    }
-    .mail:hover { transform: rotate(-2deg) translateY(-4px); }
-    .env {
-      position: absolute; inset: 0;
-      border-radius: 6px;
-      background: var(--paper);
-      box-shadow: var(--shadow);
       overflow: hidden;
+      background: #3b2414;
+      color: #f2e8d8;
+      font-family: ui-sans-serif, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
-    .env::before {
-      /* faint paper tone shift */
-      content: ""; position: absolute; inset: 0;
-      background: linear-gradient(170deg, rgba(255,255,255,0.5), rgba(0,0,0,0.03));
-    }
-    .env::after {
-      /* airmail border */
-      content: ""; position: absolute; inset: 0;
-      border: 8px solid transparent;
-      border-image: repeating-linear-gradient(135deg, #b8441f 0 12px, transparent 12px 20px, #2f4d6e 20px 32px, transparent 32px 40px) 8;
-      opacity: 0.85;
-    }
-    .stamp {
+    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 3px solid #ffd36a; outline-offset: 4px; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+    .room { position: fixed; inset: 0; overflow: hidden; } /* clips the oversized wall/floor so mobile layout viewport can't grow */
+    .stage {
       position: absolute;
-      top: 28px; right: 28px;
-      width: 76px; height: 92px;
-      padding: 4px;
-      background: #fffdf8;
-      border: 4px dotted #e4dacb;
-      box-shadow: 0 1px 2px rgba(34,29,24,0.12);
-      transform: rotate(3deg);
-      z-index: 2;
+      left: 50%; bottom: 0;
+      width: calc(160 * var(--u));
+      height: calc(100 * var(--u));
+      transform: translateX(-50%);
     }
-    .stamp-inner {
-      width: 100%; height: 100%;
-      background: #b8441f;
-      color: #fffdf8;
-      display: grid;
-      place-items: center;
-      align-content: center;
-      gap: 2px;
-      font-family: var(--display);
-      font-variation-settings: "SOFT" 100, "WONK" 1;
-      text-align: center;
-    }
-    .stamp-inner b { font-weight: 500; font-size: 30px; line-height: 1; }
-    .stamp-inner small { font-family: var(--mono); font-size: 9px; letter-spacing: 0.04em; opacity: 0.85; }
-    .postmark {
+    .o {
       position: absolute;
-      top: 40px; right: 84px;
-      width: 96px; height: 96px;
-      z-index: 3;
-      color: #2f4d6e;
-      opacity: 0.55;
-      transform: rotate(-14deg);
+      left: calc(var(--x) * var(--u));
+      top: calc(var(--y) * var(--u));
+      width: calc(var(--w) * var(--u));
+      height: calc(var(--h) * var(--u));
+      container-type: size;
+    }
+
+    /* ---------- Room shell ---------- */
+    .wall {
+      position: absolute;
+      left: -100vw; right: -100vw; top: -100vh;
+      bottom: calc(100% - 68 * var(--u));
+      background:
+        radial-gradient(ellipse calc(40 * var(--u)) calc(50 * var(--u)) at calc(100vw + 11 * var(--u)) calc(100vh + 24 * var(--u)), rgba(255, 196, 110, 0.32), transparent 70%),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0 2px, rgba(255, 220, 170, 0.06) 2px 4px, transparent 4px calc(10 * var(--u))),
+        repeating-linear-gradient(90deg, transparent 0 7px, rgba(0, 0, 0, 0.05) 7px 9px, transparent 9px 17px, rgba(255, 255, 255, 0.025) 17px 19px),
+        linear-gradient(180deg, var(--wood-2), var(--wood-1) 55%, var(--wood-2));
+    }
+    .wall::after { /* popcorn ceiling */
+      content: ""; position: absolute; left: 0; right: 0; top: 0;
+      height: calc(100vh + 2 * var(--u));
+      background:
+        radial-gradient(circle at 40% 40%, rgba(0, 0, 0, 0.07) 0 1px, transparent 1.6px) 0 0 / 5px 5px,
+        radial-gradient(circle at 60% 70%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1.6px) 0 0 / 7px 6px,
+        linear-gradient(180deg, #cfc6b4, #e3dccb);
+    }
+    .wall::before { /* crown molding */
+      content: ""; position: absolute; left: 0; right: 0;
+      top: calc(100vh + 2 * var(--u)); height: calc(2.2 * var(--u));
+      background: linear-gradient(#2a180c, #4a2d18 40%, #2a180c);
+      box-shadow: 0 calc(0.6 * var(--u)) calc(1.2 * var(--u)) rgba(0, 0, 0, 0.45);
+    }
+    .floor {
+      position: absolute;
+      left: -100vw; right: -100vw; bottom: -100vh;
+      top: calc(68 * var(--u));
+      background:
+        radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1.5px) 0 0 / 5px 5px,
+        radial-gradient(circle at 70% 60%, rgba(0, 0, 0, 0.10) 0 1px, transparent 1.5px) 0 0 / 4px 4px,
+        linear-gradient(180deg, #6e604c, var(--carpet) 30%, #a8977c);
+      border-top: calc(1.6 * var(--u)) solid #3a2312; /* baseboard */
+    }
+
+    /* ---------- Wall dressing ---------- */
+    .window { --x: 21; --y: 11; --w: 24; --h: 38; }
+    .window .pane {
+      position: absolute; inset: 0;
+      border: 1.4cqw solid #e9e1d0;
+      box-shadow: 0 0 0 0.8cqw #cfc4ae, 0 1cqw 3cqw rgba(0, 0, 0, 0.45);
+      background:
+        repeating-linear-gradient(180deg, #efe9dc 0 3.2cqh, #b9b09d 3.2cqh 3.6cqh, rgba(0, 0, 0, 0.18) 3.6cqh 4cqh),
+        #efe9dc;
+    }
+    .window .pane::before { /* daylight leaking between slats */
+      content: ""; position: absolute; inset: 0;
+      background: repeating-linear-gradient(180deg, transparent 0 3.2cqh, rgba(255, 240, 200, 0.9) 3.2cqh 3.5cqh, transparent 3.5cqh 4cqh);
+      mix-blend-mode: screen; opacity: 0.6;
+    }
+    .window .pane::after { /* pull cord */
+      content: ""; position: absolute; right: 8%; top: 0; width: 0.6cqw; height: 70%;
+      background: #d9cfbb;
+    }
+    .window .sill {
+      position: absolute; left: -6%; right: -6%; bottom: -5%; height: 5%;
+      background: linear-gradient(#efe7d6, #c9bea7);
+      box-shadow: 0 1cqw 2cqw rgba(0, 0, 0, 0.4);
+    }
+
+    .art { --x: 122; --y: 13; --w: 26; --h: 20; }
+    .art .frame {
+      position: absolute; inset: 0;
+      border: 2.4cqw solid #c8a25a;
+      outline: 0.6cqw solid #8d6c33;
+      box-shadow: 0 1.5cqw 4cqw rgba(0, 0, 0, 0.5);
+      background: #f1ead9;
+      padding: 5cqw;
+    }
+    .art svg { width: 100%; height: 100%; display: block; }
+
+    .lamp { --x: 5; --y: 18; --w: 12; --h: 54; }
+    .lamp .shade {
+      position: absolute; left: 0; right: 0; top: 0; height: 26%;
+      background: linear-gradient(90deg, #d9c39b, #fbedcc 45%, #cdb68c);
+      clip-path: polygon(22% 0, 78% 0, 100% 100%, 0 100%);
+    }
+    .lamp .shade::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8%;
+      background: rgba(255, 220, 150, 0.9); filter: blur(2px);
+    }
+    .lamp .pole { position: absolute; left: 47%; width: 6%; top: 26%; bottom: 4%; background: linear-gradient(90deg, #8c6a2a, #e8cb7a, #8c6a2a); }
+    .lamp .base { position: absolute; left: 22%; right: 22%; bottom: 0; height: 5%; border-radius: 50%; background: radial-gradient(#e8cb7a, #6b4f1c); }
+
+    .plant { --x: 132; --y: 38; --w: 22; --h: 40; }
+    .plant .pot {
+      position: absolute; left: 24%; right: 24%; bottom: 0; height: 30%;
+      background: linear-gradient(90deg, #8d3f22, #c4673d 45%, #7a341b);
+      clip-path: polygon(0 0, 100% 0, 86% 100%, 14% 100%);
+    }
+    .plant .leaf {
+      position: absolute; left: 50%; bottom: 26%;
+      width: 18%; height: 46%;
+      background: linear-gradient(90deg, #2f5a2b, #4f8a42 50%, #2a4f26);
+      border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+      transform-origin: 50% 100%;
+      transform: translateX(-50%) rotate(var(--r));
+    }
+
+    /* ---------- TV stand ---------- */
+    .stand { --x: 46; --y: 58; --w: 68; --h: 22; }
+    .stand .top {
+      position: absolute; left: 0; right: 0; top: 0; height: 8%;
+      background: linear-gradient(#c48d55, var(--oak));
+    }
+    .stand .body {
+      position: absolute; left: 1.5%; right: 1.5%; top: 8%; bottom: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0 3px, transparent 3px 9px),
+        linear-gradient(var(--oak), var(--oak-dark));
+      box-shadow: 0 2cqw 4cqw rgba(0, 0, 0, 0.5);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; padding: 2.5cqw;
+    }
+    .stand .bay {
+      background: #1a110a;
+      box-shadow: inset 0 1cqw 2cqw rgba(0, 0, 0, 0.8);
+      position: relative;
+      display: flex; align-items: flex-end; justify-content: center; gap: 1cqw;
+      padding: 0 2cqw 1.2cqw;
+    }
+    .vcr {
+      width: 100%; height: 48%;
+      background: linear-gradient(#3a3a3e, #232326);
+      border-radius: 0.6cqw;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.4cqw;
+    }
+    .vcr .slot { width: 46%; height: 26%; background: #0c0c0d; border-radius: 0.4cqw; box-shadow: inset 0 0.3cqw 0 #000, 0 0.2cqw 0 #4a4a4f; }
+    .vcr .clock {
+      font: 3.6cqw/1 var(--vt);
+      color: #5ef2a5;
+      background: #0b1410;
+      padding: 0.3cqw 1cqw;
+      text-shadow: 0 0 1cqw rgba(94, 242, 165, 0.8);
+      animation: blink 1s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+    .tapes { width: 100%; height: 70%; display: flex; gap: 0.5cqw; align-items: flex-end; }
+    .tapes i { flex: 1; height: 100%; background: #111; border-top: 1.4cqw solid #ddd; }
+    .tapes i:nth-child(2) { border-top-color: #e2b23a; }
+    .tapes i:nth-child(4) { border-top-color: #c7463a; }
+    .tapes i:nth-child(6) { border-top-color: #3a7bc7; }
+
+    /* ---------- The TV ---------- */
+    .tv { --x: 52; --y: 13; --w: 56; --h: 46; z-index: 2; }
+    .ears { position: absolute; left: 50%; bottom: 100%; width: 0; height: 0; }
+    .ears i {
+      position: absolute; bottom: 0; left: 0;
+      width: 0.8cqw; height: 34cqw;
+      background: linear-gradient(90deg, #888, #eee, #888);
+      transform-origin: 50% 100%;
+      border-radius: 1cqw;
+    }
+    .ears i:nth-child(1) { transform: rotate(-32deg); }
+    .ears i:nth-child(2) { transform: rotate(24deg); }
+    .ears b { position: absolute; left: -7cqw; bottom: -1cqw; width: 14cqw; height: 4cqw; border-radius: 50% 50% 0 0; background: #2a2a2d; }
+    .cab {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 12%),
+        linear-gradient(160deg, #2c2c30, var(--plastic) 50%, #141416);
+      border-radius: 5cqw 5cqw 3cqw 3cqw;
+      box-shadow: inset 0 0 0 0.4cqw rgba(255, 255, 255, 0.04), 0 3cqw 6cqw rgba(0, 0, 0, 0.6);
+    }
+    .bezel {
+      position: absolute; left: 4.5%; top: 6%; width: 75%; height: 81%;
+      border-radius: 5cqw;
+      background: linear-gradient(#0d0d0e, #1a1a1c);
+      box-shadow: inset 0 0.8cqw 1.5cqw rgba(0, 0, 0, 0.9), 0 0.4cqw 0 rgba(255, 255, 255, 0.06);
+      padding: 3cqw;
+    }
+    .screen {
+      position: relative; width: 100%; height: 100%;
+      overflow: hidden;
+      border-radius: 14% / 18%;
+      background: #050605;
+      box-shadow: 0 0 0 0.5cqw #000;
+      isolation: isolate;
+    }
+    .screen .yt { position: absolute; inset: 0; }
+    .screen .yt iframe, .screen .yt > div {
+      /* 16:9 player stretched over a 4:3 tube crops the pillarbox bars old uploads usually have */
+      position: absolute; top: 0; left: 50%;
+      height: 100%; width: 133.34%;
+      transform: translateX(-50%);
+      border: 0;
       pointer-events: none;
     }
-    .address {
-      position: absolute;
-      left: 40px; right: 40px; bottom: 36px;
-      z-index: 2;
-      color: #221d18;
-      font-family: var(--mono);
-      font-size: 13px;
-      line-height: 1.6;
+    .snow { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; opacity: 0.9; transition: opacity 0.25s; }
+    .screen.live .snow { opacity: 0; }
+    .screen.flick .snow { opacity: 0.9; transition: none; }
+    .glass {
+      position: absolute; inset: 0; pointer-events: none; z-index: 3;
+      background:
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px),
+        radial-gradient(ellipse 120% 100% at 30% 15%, rgba(255, 255, 255, 0.16), transparent 40%),
+        radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.65) 100%);
     }
-    .address .to {
-      font-family: var(--display);
-      font-variation-settings: "SOFT" 100, "WONK" 1;
-      font-size: 28px;
-      line-height: 1.1;
-      margin-bottom: 8px;
-      color: #221d18;
+    .osd {
+      position: absolute; z-index: 4; top: 6%; right: 8%;
+      font: 7cqw/1 var(--vt); color: #7dff9a;
+      text-shadow: 0 0 1cqw #3f3, 0.3cqw 0.3cqw 0 #000;
+      pointer-events: none;
+      transition: opacity 0.3s;
     }
-    .address .rule { border-bottom: 1px solid rgba(34,29,24,0.18); height: 24px; }
-    .address .hint { color: #8a8077; margin-top: 12px; display: flex; align-items: center; gap: 8px; }
-    .address .hint svg.i { width: 16px; height: 16px; transition: transform 160ms var(--ease); }
-    .mail:hover .hint svg.i { transform: translateX(4px); }
+    .osd.hide { opacity: 0; }
+    .nosignal {
+      position: absolute; z-index: 4; inset: 0; display: none;
+      place-items: center; align-content: center; gap: 2cqw;
+      font: 6cqw/1 var(--vt); color: #fff; text-shadow: 0.3cqw 0.3cqw 0 #000; letter-spacing: 0.1em;
+      pointer-events: none;
+    }
+    .nosignal small { font-size: 3.6cqw; opacity: 0.8; letter-spacing: 0.05em; }
+    .screen.nosig .nosignal { display: grid; }
+    .sound {
+      position: absolute; z-index: 5; left: 50%; bottom: 9%;
+      transform: translateX(-50%);
+      font: 5cqw/1 var(--vt); letter-spacing: 0.06em;
+      color: #fff; background: rgba(0, 0, 160, 0.85);
+      padding: 1.6cqw 3cqw 1.2cqw;
+      border: 0.4cqw solid #fff;
+      white-space: nowrap;
+      animation: nudge 1.6s ease-in-out infinite;
+    }
+    .sound[hidden] { display: none; }
+    @keyframes nudge { 50% { transform: translateX(-50%) scale(1.05); } }
+    .screen.off .yt, .screen.off .snow, .screen.off .osd, .screen.off .sound, .screen.off .nosignal { visibility: hidden; }
+    .screen::after { /* power-off collapse line */
+      content: ""; position: absolute; left: 50%; top: 50%; z-index: 6;
+      width: 100%; height: 100%; background: #e8fff8; opacity: 0;
+      transform: translate(-50%, -50%) scale(1, 1); pointer-events: none;
+    }
+    .screen.off::after { animation: crtoff 0.45s ease-in forwards; }
+    @keyframes crtoff {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1, 1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1, 0.006); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0, 0.006); }
+    }
+    .side {
+      position: absolute; right: 3%; top: 8%; width: 14%; height: 79%;
+      display: flex; flex-direction: column; align-items: center; gap: 4cqw;
+    }
+    .grille { width: 100%; flex: 1; background: repeating-linear-gradient(180deg, #0a0a0b 0 1cqw, #2a2a2e 1cqw 2cqw); border-radius: 1cqw; }
+    .knob { width: 6cqw; height: 6cqw; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #777, #222 70%); box-shadow: 0 0.4cqw 0.6cqw rgba(0, 0, 0, 0.6); }
+    .led { width: 1.4cqw; height: 1.4cqw; border-radius: 50%; background: #ff3b2f; box-shadow: 0 0 1.5cqw #ff3b2f; }
+    .tv.off .led { background: #400; box-shadow: none; }
+    .badge {
+      position: absolute; left: 4.5%; bottom: 3.5%;
+      font: 3.4cqw/1 "Archivo Black", sans-serif; letter-spacing: 0.25em; color: #9a9aa0;
+    }
 
-    @keyframes rise { from { opacity: 0; transform: translateY(8px) rotate(var(--r, 0deg)); } }
-    .mail { --r: -4deg; }
+    /* ---------- Coffee table (foreground) ---------- */
+    .table { --x: 20; --y: 75; --w: 120; --h: 28; z-index: 3; }
+    .table .slab {
+      position: absolute; inset: 0;
+      clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+      background:
+        repeating-linear-gradient(92deg, rgba(0, 0, 0, 0.06) 0 2px, transparent 2px 11px, rgba(255, 255, 255, 0.04) 11px 13px, transparent 13px 23px),
+        linear-gradient(180deg, #a06c3c, #c38b52 40%, #b07a45);
+    }
+    .table .slab::before { /* top edge highlight */
+      content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3%;
+      background: linear-gradient(#e0ae74, transparent);
+    }
+    .item { position: absolute; display: block; transition: transform 0.2s ease; container-type: size; }
+    .item:hover { transform: translateY(-1cqh) rotate(var(--r, 0deg)) scale(1.03) !important; }
+
+    .mag {
+      left: 17%; top: 8%; width: 21%; height: 80%;
+      --r: -6deg; transform: rotate(var(--r));
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.25), transparent 40%),
+        linear-gradient(180deg, #13a3a0, #0d6f86);
+      box-shadow: 0.6cqw 1cqw 1.6cqw rgba(0, 0, 0, 0.45);
+      padding: 0;
+      color: #fff;
+      overflow: hidden;
+    }
+    .mag .mast {
+      display: block; margin: 7cqw 0 0 7cqw;
+      font: 17cqw/0.88 "Archivo Black", sans-serif;
+      letter-spacing: -0.02em;
+      color: #ffe14d;
+      text-shadow: 1.2cqw 1.2cqw 0 #c2185b;
+    }
+    .mag .issue { display: block; font: 700 4.6cqw/1 ui-sans-serif, sans-serif; letter-spacing: 0.12em; margin: 4cqw 0 0 7cqw; opacity: 0.85; }
+    .mag .cover-line {
+      position: absolute; left: 6%; right: 34%; bottom: 7%;
+      font: 9cqw/1 "Archivo Black", sans-serif; text-transform: uppercase;
+      text-shadow: 0.2cqw 0.2cqw 0 rgba(0, 0, 0, 0.4);
+    }
+    .mag .cover-line em { display: block; font-style: normal; font: 700 5.2cqw/1.2 ui-sans-serif, sans-serif; text-transform: none; color: #ffe14d; margin-top: 5%; text-shadow: none; }
+    .mag .dot {
+      position: absolute; right: 5%; bottom: 8%;
+      width: 28cqw; height: 28cqw; border-radius: 50%;
+      background: #c2185b; color: #fff;
+      display: grid; place-items: center; text-align: center;
+      font: 5.4cqw/1.05 "Archivo Black", sans-serif;
+      transform: rotate(12deg);
+    }
+
+    .remote {
+      left: 46%; top: 4%; width: 7%; height: 84%;
+      --r: 14deg; transform: rotate(var(--r));
+      background: linear-gradient(90deg, #232326, #3a3a3e 50%, #1d1d20);
+      border-radius: 1.6cqw 1.6cqw 2.4cqw 2.4cqw;
+      box-shadow: 0.6cqw 1.2cqw 1.6cqw rgba(0, 0, 0, 0.5);
+      display: flex; flex-direction: column; align-items: center; gap: 4%;
+      padding: 0;
+    }
+    .remote:hover { transform: rotate(var(--r)) !important; }
+    .remote .ir { margin-top: 12cqh; width: 40%; height: 3%; background: #4a0a0a; border-radius: 1cqw; }
+    .remote button {
+      width: 52%; aspect-ratio: 1; border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #8a8a90, #4a4a50);
+      font: 20cqw/1 var(--vt); color: #fff;
+      box-shadow: 0 0.3cqw 0 #111;
+      display: grid; place-items: center;
+      position: relative;
+    }
+    .remote button::before { content: ""; position: absolute; inset: -40%; } /* bigger tap target */
+    .remote button:active { transform: translateY(0.2cqw); box-shadow: none; }
+    .remote .pwr { background: radial-gradient(circle at 40% 35%, #ff6b5e, #b3241a); }
+    .remote .mute { background: radial-gradient(circle at 40% 35%, #6ab0ff, #1f5fb3); }
+    .remote .rows { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6cqw; width: 70%; margin-top: 2%; }
+    .remote .rows i { aspect-ratio: 1.4; background: #555; border-radius: 0.5cqw; }
+
+    .vhs {
+      left: 62%; top: 8%; width: 22%; height: 66%;
+      --r: 5deg; transform: rotate(var(--r));
+    }
+    .vhs .sleeve {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, #1b1b1d, #0d0d0e);
+      border-radius: 0.6cqw;
+      box-shadow: 0.6cqw 1.2cqw 1.6cqw rgba(0, 0, 0, 0.5);
+    }
+    .vhs .reels { /* tape reels */
+      position: absolute; left: 22%; right: 22%; top: 12%; height: 26%;
+      background: #2c2c30; border-radius: 0.5cqw;
+      display: flex; justify-content: space-around; align-items: center;
+    }
+    .vhs .reels i { width: 22%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(#ddd 22%, #3a2a1c 24% 92%, #111 94%); }
+    .vhs .label {
+      position: absolute; left: 7%; right: 7%; bottom: 10%; height: 44%;
+      background: #fbf7ea;
+      border-top: 4cqw solid #e2b23a;
+      color: #1a1a1a;
+      padding: 3% 5%;
+      display: flex; flex-direction: column; justify-content: center; gap: 4%;
+    }
+    .vhs .label b { font: 13cqw/1 "Comic Sans MS", "Marker Felt", "Chalkboard SE", cursive; color: #1a3d8f; }
+    .vhs .label span { font: 6.4cqw/1.25 ui-sans-serif, sans-serif; color: #555; }
+    .vhs .label span u { text-decoration: none; border-bottom: 0.2cqw solid #c7463a; }
+
+    .ring { /* coffee-cup ring stain */
+      position: absolute; left: 88%; top: 22%; width: 6%; aspect-ratio: 1.2; border-radius: 50%;
+      border: 0.4cqw solid rgba(70, 35, 10, 0.25);
+    }
+
+    /* ---------- Couch arms (viewer's own couch, fixed to the viewport corners) ---------- */
+    .arm {
+      position: absolute; bottom: calc(-10 * var(--u)); z-index: 4;
+      width: calc(22 * var(--u)); height: calc(40 * var(--u));
+      background:
+        repeating-linear-gradient(0deg, rgba(31, 95, 90, 0.55) 0 calc(0.9 * var(--u)), transparent calc(0.9 * var(--u)) calc(4 * var(--u))),
+        repeating-linear-gradient(90deg, rgba(31, 95, 90, 0.55) 0 calc(0.9 * var(--u)), transparent calc(0.9 * var(--u)) calc(4 * var(--u))),
+        repeating-linear-gradient(90deg, rgba(230, 200, 150, 0.18) 0 2px, transparent 2px calc(2 * var(--u))),
+        linear-gradient(180deg, #8a4a5c, #6b3445);
+      box-shadow: inset 0 calc(2 * var(--u)) calc(3 * var(--u)) rgba(255, 220, 200, 0.18), inset 0 calc(-6 * var(--u)) calc(6 * var(--u)) rgba(0, 0, 0, 0.5);
+      filter: blur(0.6px);
+    }
+    .arm.l { left: calc(-9 * var(--u)); border-radius: 0 calc(10 * var(--u)) 0 0; transform: rotate(8deg); }
+    .arm.r { right: calc(-9 * var(--u)); border-radius: calc(10 * var(--u)) 0 0 0; transform: rotate(-8deg); }
+    .shade-all { position: absolute; inset: 0; pointer-events: none; z-index: 5; background: radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(20, 10, 0, 0.45)); }
+
+    /* ---------- Portrait: rearrange onto a 100 x 170 stage ---------- */
+    @media (max-aspect-ratio: 5/6) {
+      :root { --u: min(100vw / 100, 1dvh * 100 / 200); }
+      .stage { width: calc(100 * var(--u)); height: calc(200 * var(--u)); }
+      .wall { bottom: calc(100% - 136 * var(--u)); }
+      .wall::before { top: calc(100vh + 1 * var(--u)); }
+      .floor { top: calc(136 * var(--u)); }
+      .window { --x: 6; --y: 16; --w: 30; --h: 26; }
+      .art { --x: 62; --y: 18; --w: 30; --h: 22; }
+      .lamp, .plant { display: none; }
+      .tv { --x: 6; --y: 70; --w: 88; --h: 72.3; }
+      .ears i { height: 18cqw; }
+      .stand { --x: 4; --y: 139; --w: 92; --h: 22; }
+      .table { --x: -4; --y: 156; --w: 108; --h: 48; }
+      .mag { left: 6%; top: 5%; width: 38%; height: 80%; }
+      .remote { left: 47%; top: 3%; width: 12%; height: 86%; --r: 6deg; }
+      .remote .rows { display: none; }
+      .vhs { left: 62%; top: 8%; width: 34%; height: 54%; --r: 4deg; }
+      .ring { display: none; }
+      .arm { width: calc(14 * var(--u)); height: calc(40 * var(--u)); bottom: calc(-26 * var(--u)); }
+      .arm.l { left: calc(-10 * var(--u)); }
+      .arm.r { right: calc(-10 * var(--u)); }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
-
-    @media (max-width: 820px) {
-      .page { padding: 24px 16px 32px; gap: 40px; grid-template-rows: auto auto auto; }
-      .hero { align-content: start; }
-      .hero { grid-template-columns: 1fr; gap: 48px; }
-      .lede { font-size: 17px; }
-      .mail { width: min(100%, 360px); transform: rotate(-3deg); --r: -3deg; }
-      .stamp { top: 20px; right: 20px; width: 60px; height: 74px; }
-      .stamp-inner b { font-size: 24px; }
-      .postmark { top: 28px; right: 64px; width: 76px; height: 76px; }
-      .address { left: 28px; right: 28px; bottom: 24px; font-size: 12px; }
-      .address .to { font-size: 22px; }
-      .address .rule { height: 20px; }
-    }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <span>travisyeager.com</span>
-      <span class="status">Inbox open</span>
-    </header>
+  <h1 class="sr">Travis Yeager</h1>
 
-    <main class="hero">
-      <div class="copy">
-        <h1><span>Travis</span><span class="last">Yeager</span></h1>
-        <p class="lede">Nothing posted here yet. Until there is, the best way to find me is a note in the mail.</p>
-        <div class="actions">
-          <a class="btn js-mail" href="#contact">
-            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-            <span class="js-mail-label">Email me</span>
-          </a>
-          <a class="link" href="https://www.linkedin.com/in/traviswyeager/" rel="me noopener">
-            LinkedIn
-            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
-          </a>
+  <div class="room">
+  <main class="stage">
+    <div class="wall" aria-hidden="true"></div>
+    <div class="floor" aria-hidden="true"></div>
+
+    <div class="o window" aria-hidden="true"><div class="pane"></div><div class="sill"></div></div>
+
+    <div class="o art" aria-hidden="true">
+      <div class="frame">
+        <svg viewBox="0 0 120 80" preserveAspectRatio="none">
+          <rect width="120" height="80" fill="#f6d9b8"/>
+          <circle cx="78" cy="44" r="22" fill="#f08a5d"/>
+          <path d="M0 58 Q30 40 60 56 T120 50 V80 H0Z" fill="#3e8e8a"/>
+          <path d="M0 66 Q40 54 80 66 T120 62 V80 H0Z" fill="#2b5f73"/>
+          <path d="M14 16 L30 16 M20 24 L44 24" stroke="#c2185b" stroke-width="2.5"/>
+          <path d="M96 12 l8 8 l-8 8 l-8 -8z" fill="#ffd166"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="o lamp" aria-hidden="true"><div class="shade"></div><div class="pole"></div><div class="base"></div></div>
+
+    <div class="o plant" aria-hidden="true">
+      <i class="leaf" style="--r:-38deg"></i><i class="leaf" style="--r:-18deg;height:56%"></i>
+      <i class="leaf" style="--r:2deg;height:62%"></i><i class="leaf" style="--r:22deg;height:54%"></i>
+      <i class="leaf" style="--r:42deg"></i>
+      <div class="pot"></div>
+    </div>
+
+    <div class="o stand" aria-hidden="true">
+      <div class="top"></div>
+      <div class="body">
+        <div class="bay"><div class="vcr"><span class="slot"></span><span class="clock">12:00</span></div></div>
+        <div class="bay"><div class="tapes"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      </div>
+    </div>
+
+    <section class="o tv" id="tv" aria-label="Television playing old music videos">
+      <div class="ears" aria-hidden="true"><i></i><i></i><b></b></div>
+      <div class="cab"></div>
+      <div class="bezel">
+        <div class="screen" id="screen">
+          <div class="yt"><div id="player"></div></div>
+          <canvas class="snow" id="snow" width="160" height="120" aria-hidden="true"></canvas>
+          <div class="nosignal" aria-hidden="true">NO SIGNAL<small>CH 03 &middot; AWAITING TAPE</small></div>
+          <div class="osd" id="osd" aria-hidden="true">CH 03</div>
+          <button class="sound" id="sound" type="button">&#9654; TAP FOR SOUND</button>
+          <div class="glass" aria-hidden="true"></div>
         </div>
-        <noscript><p class="lede" style="font-family:var(--mono);font-size:14px">me [at] travisyeager [dot] com</p></noscript>
+      </div>
+      <div class="side" aria-hidden="true"><div class="grille"></div><div class="knob"></div><div class="knob"></div><div class="led"></div></div>
+      <div class="badge" aria-hidden="true">YEAGERVISION</div>
+    </section>
+
+    <div class="o table">
+      <div class="slab" aria-hidden="true"></div>
+      <span class="ring" aria-hidden="true"></span>
+
+      <a class="item mag js-mail" href="#contact" aria-label="Email Travis">
+        <span class="mast" aria-hidden="true">TRAVIS<br>YEAGER</span>
+        <span class="issue" aria-hidden="true">VOL. 1 &middot; NO. 1 &middot; $2.95</span>
+        <span class="dot" aria-hidden="true">WRITE<br>IN!</span>
+        <span class="cover-line" aria-hidden="true">Drop me a line<em>Letters to the editor &rarr;</em></span>
+      </a>
+
+      <div class="item remote" role="group" aria-label="TV remote">
+        <span class="ir" aria-hidden="true"></span>
+        <button class="pwr" id="pwr" type="button" aria-label="Power">PWR</button>
+        <button class="mute" id="mute" type="button" aria-label="Toggle sound">SND</button>
+        <button id="chup" type="button" aria-label="Next video">CH+</button>
+        <button id="chdn" type="button" aria-label="Previous video">CH&minus;</button>
+        <span class="rows" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
       </div>
 
-      <a class="mail js-mail" href="#contact" aria-label="Send Travis an email">
-        <div class="env" aria-hidden="true"></div>
-        <div class="stamp" aria-hidden="true"><div class="stamp-inner"><b>TY</b><small>1st class</small></div></div>
-        <svg class="postmark" viewBox="0 0 100 100" aria-hidden="true">
-          <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="2"/>
-          <circle cx="50" cy="50" r="34" fill="none" stroke="currentColor" stroke-width="1"/>
-          <path id="pm" d="M50 50 m-39 0 a39 39 0 1 1 78 0 a39 39 0 1 1 -78 0" fill="none"/>
-          <text font-family="IBM Plex Mono, monospace" font-size="8.5" fill="currentColor" letter-spacing="1"><textPath href="#pm">TRAVISYEAGER.COM · EST 2026 ·</textPath></text>
-          <text x="50" y="54" font-family="IBM Plex Mono, monospace" font-size="10" fill="currentColor" text-anchor="middle">HELLO</text>
-        </svg>
-        <div class="address" aria-hidden="true">
-          <div class="to">Travis Yeager</div>
-          <div class="rule"></div>
-          <div class="rule"></div>
-          <div class="hint">Click to write
-            <svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </div>
-        </div>
+      <a class="item vhs" href="https://www.linkedin.com/in/traviswyeager/" rel="me noopener" aria-label="Travis Yeager on LinkedIn">
+        <span class="sleeve" aria-hidden="true"></span>
+        <span class="reels" aria-hidden="true"><i></i><i></i></span>
+        <span class="label" aria-hidden="true"><b>LinkedIn</b><span><u>Travis Yeager</u> &middot; SP &middot; 1991</span></span>
       </a>
-    </main>
+    </div>
+  </main>
 
-    <footer>
-      <span>&copy; <span id="y">2026</span> Travis Yeager</span>
-    </footer>
+  <div class="arm l" aria-hidden="true"></div>
+  <div class="arm r" aria-hidden="true"></div>
+  <div class="shade-all" aria-hidden="true"></div>
   </div>
 
+  <noscript><p style="position:fixed;left:0;right:0;bottom:0;padding:12px;background:#000;text-align:center;font-family:monospace;z-index:9">me [at] travisyeager [dot] com</p></noscript>
+
   <script>
-    // The address is assembled here instead of written in the HTML, so scrapers that read raw markup don't find it.
+    /* =====================  CONFIG  =====================
+       Paste your YouTube playlist ID here. It's the part after "list=" in the
+       playlist URL, e.g. https://www.youtube.com/playlist?list=PLxxxxxxxx */
+    var PLAYLIST_ID = "PASTE_PLAYLIST_ID_HERE";
+    var SHUFFLE = true;
+    /* ==================================================== */
+
+    // Preview override: ?list=PLAYLIST_ID in the page URL beats the config above.
+    var urlList = new URLSearchParams(location.search).get("list");
+    if (urlList && /^[\w-]{10,64}$/.test(urlList)) PLAYLIST_ID = urlList;
+
+    // Email is assembled at runtime so scrapers reading raw markup don't find it.
     (function () {
       var parts = ["moc", "regaeysivart", "em"];
       var rev = function (s) { return s.split("").reverse().join(""); };
       var addr = rev(parts[2]) + String.fromCharCode(64) + rev(parts[1]) + "." + rev(parts[0]);
       document.querySelectorAll(".js-mail").forEach(function (a) {
         a.setAttribute("href", "mai" + "lto:" + addr);
+        a.setAttribute("title", addr);
       });
-      var label = document.querySelector(".js-mail-label");
-      if (label) label.setAttribute("title", addr);
-      document.getElementById("y").textContent = new Date().getFullYear();
+    })();
+
+    (function () {
+      var screen = document.getElementById("screen");
+      var tv = document.getElementById("tv");
+      var osd = document.getElementById("osd");
+      var soundBtn = document.getElementById("sound");
+      var canvas = document.getElementById("snow");
+      var ctx = canvas.getContext("2d");
+      var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var player = null, ready = false, on = true, muted = true, ch = 3, osdTimer, skips = 0;
+
+      // Static: redraw random grey pixels ~24 times a second, only while visible.
+      var img = ctx.createImageData(canvas.width, canvas.height), last = 0;
+      function snow(t) {
+        var visible = !screen.classList.contains("live") || screen.classList.contains("flick");
+        if (visible && on && t - last > 40) {
+          last = t;
+          var d = img.data;
+          for (var i = 0; i < d.length; i += 4) { var v = Math.random() * 255 | 0; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+          ctx.putImageData(img, 0, 0);
+        }
+        if (!still) requestAnimationFrame(snow);
+      }
+      requestAnimationFrame(snow);
+
+      function showOsd(text, ms) {
+        osd.textContent = text;
+        osd.classList.remove("hide");
+        clearTimeout(osdTimer);
+        osdTimer = setTimeout(function () { osd.classList.add("hide"); }, ms || 2200);
+      }
+      function flick() {
+        screen.classList.add("flick");
+        setTimeout(function () { screen.classList.remove("flick"); }, 350);
+      }
+
+      var configured = PLAYLIST_ID && PLAYLIST_ID.indexOf("PASTE_") !== 0;
+      if (!configured) {
+        screen.classList.add("nosig");
+        soundBtn.hidden = true;
+      } else {
+        window.onYouTubeIframeAPIReady = function () {
+          player = new YT.Player("player", {
+            host: "https://www.youtube-nocookie.com",
+            playerVars: {
+              listType: "playlist", list: PLAYLIST_ID,
+              autoplay: 1, mute: 1, playsinline: 1, controls: 0, disablekb: 1,
+              rel: 0, iv_load_policy: 3, fs: 0, loop: 1
+            },
+            events: {
+              onReady: function () {
+                ready = true;
+                player.mute();
+                if (SHUFFLE) player.setShuffle(true);
+                player.setLoop(true);
+                player.playVideo();
+              },
+              onStateChange: function (e) {
+                if (e.data === YT.PlayerState.PLAYING) {
+                  skips = 0;
+                  if (!screen.classList.contains("live")) showOsd("CH " + String(ch).padStart(2, "0"));
+                  screen.classList.add("live");
+                } else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) {
+                  screen.classList.remove("live");
+                }
+              },
+              // Music videos often get deleted, block embedding or are region-locked; skip to the next one.
+              // This can fire before onReady, so don't gate it on `ready`. Cap retries so a dead playlist can't spin forever.
+              onError: function () {
+                screen.classList.remove("live");
+                if (++skips <= 25) setTimeout(function () { player.nextVideo(); }, 400);
+              }
+            }
+          });
+        };
+        var s = document.createElement("script");
+        s.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(s);
+      }
+
+      function setMuted(m) {
+        muted = m;
+        soundBtn.hidden = !m || !configured;
+        if (!ready) return;
+        if (m) { player.mute(); showOsd("MUTE"); }
+        else { player.unMute(); player.setVolume(80); player.playVideo(); showOsd("VOL ███████░░"); }
+      }
+      function power() {
+        on = !on;
+        screen.classList.toggle("off", !on);
+        tv.classList.toggle("off", !on);
+        if (ready) on ? player.playVideo() : player.pauseVideo();
+        if (on) { flick(); showOsd("CH " + String(ch).padStart(2, "0")); }
+      }
+      function channel(dir) {
+        if (!on) return power();
+        flick();
+        ch = ((ch - 2 + dir + 98) % 98) + 2; // stays in 02..99 like a real dial
+        showOsd("CH " + String(ch).padStart(2, "0"));
+        if (ready) dir > 0 ? player.nextVideo() : player.previousVideo();
+      }
+
+      soundBtn.addEventListener("click", function () { setMuted(false); });
+      document.getElementById("mute").addEventListener("click", function () { if (configured) setMuted(!muted); });
+      document.getElementById("pwr").addEventListener("click", power);
+      document.getElementById("chup").addEventListener("click", function () { channel(1); });
+      document.getElementById("chdn").addEventListener("click", function () { channel(-1); });
+      showOsd("CH 03", 3000);
     })();
   </script>
 </body>
