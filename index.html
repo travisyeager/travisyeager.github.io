@@ -571,6 +571,10 @@
     var SHUFFLE = true;
     /* ==================================================== */
 
+    // Preview override: ?list=PLAYLIST_ID in the page URL beats the config above.
+    var urlList = new URLSearchParams(location.search).get("list");
+    if (urlList && /^[\w-]{10,64}$/.test(urlList)) PLAYLIST_ID = urlList;
+
     // Email is assembled at runtime so scrapers reading raw markup don't find it.
     (function () {
       var parts = ["moc", "regaeysivart", "em"];
