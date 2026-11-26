@@ -594,7 +594,7 @@
       var canvas = document.getElementById("snow");
       var ctx = canvas.getContext("2d");
       var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      var player = null, ready = false, on = true, muted = true, ch = 3, osdTimer;
+      var player = null, ready = false, on = true, muted = true, ch = 3, osdTimer, skips = 0;
 
       // Static: redraw random grey pixels ~24 times a second, only while visible.
       var img = ctx.createImageData(canvas.width, canvas.height), last = 0;
@@ -644,14 +644,19 @@
               },
               onStateChange: function (e) {
                 if (e.data === YT.PlayerState.PLAYING) {
+                  skips = 0;
                   if (!screen.classList.contains("live")) showOsd("CH " + String(ch).padStart(2, "0"));
                   screen.classList.add("live");
                 } else if (e.data === YT.PlayerState.BUFFERING || e.data === YT.PlayerState.UNSTARTED) {
                   screen.classList.remove("live");
                 }
               },
-              // Music videos often block embedding or are region-locked; skip to the next one.
-              onError: function () { if (ready) player.nextVideo(); }
+              // Music videos often get deleted, block embedding or are region-locked; skip to the next one.
+              // This can fire before onReady, so don't gate it on `ready`. Cap retries so a dead playlist can't spin forever.
+              onError: function () {
+                screen.classList.remove("live");
+                if (++skips <= 25) setTimeout(function () { player.nextVideo(); }, 400);
+              }
             }
           });
         };
